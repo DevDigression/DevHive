@@ -39,7 +39,45 @@ router.get(
   }
 );
 
-// @route   POST /api/profile/test
+// @route   GET /api/profile/handle/:handle
+// @desc    Find profile by handle
+// @access  Public
+router.get("/handle/:handle", (req, res) => {
+  const errors = {};
+
+  Profile.findOne({ handle: req.params.handle })
+    .populate("user", ["name", "avatar"])
+    .then(profile => {
+      if (!profile) {
+        errors.noprofile = "Profile not found.";
+        res.status(404).json(errors);
+      }
+
+      res.json(profile);
+    })
+    .catch(err => res.json(404).json(err));
+});
+
+// @route   GET /api/profile/user/:user_id
+// @desc    Find profile by User ID
+// @access  Public
+router.get("/user/:user_id", (req, res) => {
+  const errors = {};
+
+  Profile.findOne({ user: req.params.user_id })
+    .populate("user", ["name", "avatar"])
+    .then(profile => {
+      if (!profile) {
+        errors.noprofile = "Profile not found.";
+        res.status(404).json(errors);
+      }
+
+      res.json(profile);
+    })
+    .catch(err => res.json(404).json(err));
+});
+
+// @route   POST /api/profile
 // @desc    Create or edit user profile
 // @access  Private
 router.post(
