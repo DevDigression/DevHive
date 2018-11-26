@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const passport = require("passport");
 
 // @route   GET /api/posts/test
 // @desc    Tests posts route
@@ -7,5 +9,23 @@ const router = express.Router();
 router.get("/test", (req, res) => {
   res.json({ message: "Posts tested successfully!" });
 });
+
+// @route   POST /api/posts
+// @desc    Create post
+// @access  Private
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const newPost = new Post({
+      user: req.user.id,
+      name: req.body.name,
+      avatar: req.body.avatar,
+      text: req.body.text
+    });
+
+    newPost.save().then(post => res.json(post));
+  }
+);
 
 module.exports = router;
