@@ -12,7 +12,7 @@ export const registeruser = userData => dispatch => {
       })
     );
   return {
-    type: TEST_DISPATCH,
+    type: GET_ERRORS,
     payload: userData
   };
 };
